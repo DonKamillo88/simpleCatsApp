@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SimpleCatsApp</string>
+    <string name="save">Save cat</string>
+    <string name="show_saved">Show saved cats</string>
+</resources>
