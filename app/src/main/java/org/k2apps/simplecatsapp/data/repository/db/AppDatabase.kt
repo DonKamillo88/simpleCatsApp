@@ -12,7 +12,6 @@ import org.k2apps.simplecatsapp.data.model.Breed
 import org.k2apps.simplecatsapp.data.model.Cat
 
 @Database(entities = [Cat::class, Breed::class], version = 2, exportSchema = false)
-
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun catsDao(): CatsDao

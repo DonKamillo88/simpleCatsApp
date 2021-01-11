@@ -7,9 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import org.k2apps.simplecatsapp.databinding.CatListFragmentBinding
 
-
+@AndroidEntryPoint
 class CatListFragment : Fragment() {
 
     private val viewModel: CatListViewModel by lazy {

@@ -1,21 +1,17 @@
 package org.k2apps.simplecatsapp.ui.list
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.k2apps.simplecatsapp.data.model.Cat
-import org.k2apps.simplecatsapp.data.repository.db.AppDatabase
 import org.k2apps.simplecatsapp.data.repository.db.CatsRepository
 import org.k2apps.simplecatsapp.data.repository.remote.CatsApi
 
-class CatListViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val catsRepository: CatsRepository =
-        CatsRepository(AppDatabase.getDatabase(getApplication()).catsDao())
+class CatListViewModel @ViewModelInject constructor(val catsRepository: CatsRepository) : ViewModel() {
 
     private val _cats = MutableLiveData<List<Cat>>()
     private val _navigateToSelectedCat = MutableLiveData<Cat>()

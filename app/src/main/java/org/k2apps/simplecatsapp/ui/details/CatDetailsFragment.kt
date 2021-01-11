@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import dagger.hilt.android.AndroidEntryPoint
 import org.k2apps.simplecatsapp.databinding.CatDetailsFragmentBinding
 
+@AndroidEntryPoint
 class CatDetailsFragment : Fragment() {
 
     override fun onCreateView(
@@ -25,9 +27,7 @@ class CatDetailsFragment : Fragment() {
         Log.e(TAG, "onCreateView: $cat")
 
         val viewModelFactory = CatDetailsViewModelFactory(cat, requireNotNull(activity).application)
-        binding.viewModel = ViewModelProvider(
-            this, viewModelFactory
-        ).get(CatDetailsViewModel::class.java)
+        binding.viewModel = ViewModelProvider(this, viewModelFactory).get(CatDetailsViewModel::class.java)
 
         return binding.root
     }

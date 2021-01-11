@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.k2apps.simplecatsapp.data.model.Cat
 
 /**
- * Simple ViewModel factory that provides the MarsProperty and context to the ViewModel.
+ * Simple ViewModel factory that provides the Cat and context to the ViewModel.
  */
 class CatDetailsViewModelFactory(
     private val cat: Cat,
