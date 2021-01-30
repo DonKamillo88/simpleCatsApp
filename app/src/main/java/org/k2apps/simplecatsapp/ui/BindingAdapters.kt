@@ -27,12 +27,12 @@ import com.bumptech.glide.request.RequestOptions
 import org.k2apps.simplecatsapp.R
 import org.k2apps.simplecatsapp.data.model.Breed
 import org.k2apps.simplecatsapp.data.model.Cat
-import org.k2apps.simplecatsapp.ui.list.PhotoGridAdapter
+import org.k2apps.simplecatsapp.ui.list.CatGridAdapter
 
 
 @BindingAdapter("listData")
 fun bindRecyclerView(recyclerView: RecyclerView, data: List<Cat>?) {
-    val adapter = recyclerView.adapter as PhotoGridAdapter
+    val adapter = recyclerView.adapter as CatGridAdapter
     adapter.submitList(data)
 }
 

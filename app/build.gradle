@@ -18,7 +18,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "com.example.android.hilt.CustomTestRunner"
+        testInstrumentationRunner "org.k2apps.simplecatsapp.TestRunner"
     }
 
     buildTypes {
@@ -27,8 +27,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    buildFeatures {
-        dataBinding true
+
+    dataBinding {
+        enabled = true
+        enabledForTests = true
     }
 
     compileOptions {
@@ -39,6 +41,7 @@ android {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
     kapt {
+        correctErrorTypes = true
         arguments {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
@@ -70,9 +73,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
 
-    // Kotlin Extensions and Coroutines support for Room
-//    implementation "androidx.room:room-ktx:$version_room"
-
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version_coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
@@ -98,19 +98,43 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$version_coroutine"
 
-
     // Hilt
     implementation "com.google.dagger:hilt-android:$version_hilt"
     kapt "com.google.dagger:hilt-android-compiler:$version_hilt"
     implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02'
     kapt 'androidx.hilt:hilt-compiler:1.0.0-alpha02'
 
-    // Hilt testing dependency
-    androidTestImplementation "com.google.dagger:hilt-android-testing:$version_hilt"
-    // Make Hilt generate code in the androidTest folder
+
+    // Test
+    // Hilt
     kaptAndroidTest "com.google.dagger:hilt-android-compiler:$version_hilt"
-    
-    testImplementation 'junit:junit:4.13.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$version_hilt"
+
+    // junit
+    testImplementation "junit:junit:$version_junit"
+
+    // robolectric
+    testImplementation "org.robolectric:robolectric:$version_robolectric"
+
+    // mockito
+    testImplementation 'org.mockito:mockito-core:3.3.3'
+    androidTestImplementation 'org.mockito:mockito-android:3.3.3'
+
+    // espresso
+    androidTestImplementation "androidx.test.espresso:espresso-core:$version_espresso"
+
+    // androidX
+    testImplementation "androidx.arch.core:core-testing:$version_arch_testing"
+    testImplementation "androidx.test:core-ktx:$version_androidX_test_core"
+    testImplementation "androidx.test.ext:junit:$version_androidX_test_ext_kotlin_runner"
+    androidTestImplementation "androidx.test.ext:junit:$version_androidX_test_ext_kotlin_runner"
+
+    // coroutines
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$version_coroutine"
+
+    // retrofit
+    testImplementation 'com.squareup.retrofit2:retrofit-mock:2.3.0'
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.0.0")
+    testImplementation 'org.amshove.kluent:kluent:1.30'
 }

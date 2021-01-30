@@ -25,8 +25,8 @@ import androidx.recyclerview.widget.RecyclerView
 import org.k2apps.simplecatsapp.data.model.Cat
 import org.k2apps.simplecatsapp.databinding.GridViewItemBinding
 
-class PhotoGridAdapter(private val onClickListener: OnClickListener) :
-    ListAdapter<Cat, PhotoGridAdapter.CatViewHolder>(DiffCallback) {
+class CatGridAdapter(private val onClickListener: OnClickListener) :
+    ListAdapter<Cat, CatGridAdapter.CatViewHolder>(DiffCallback) {
 
     class CatViewHolder(private var binding: GridViewItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -42,7 +42,7 @@ class PhotoGridAdapter(private val onClickListener: OnClickListener) :
         }
 
         override fun areContentsTheSame(oldItem: Cat, newItem: Cat): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.id == newItem.id && oldItem.isSaved == newItem.isSaved
         }
     }
 

@@ -2,4 +2,9 @@
     <string name="app_name">SimpleCatsApp</string>
     <string name="save">Save cat</string>
     <string name="show_saved">Show saved cats</string>
+    <string name="saved">Cat saved in favourites</string>
+    <string name="not_saved">Not saved</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_saved_cats">Saved cats</string>
+    <string name="menu_about">About</string>
 </resources>

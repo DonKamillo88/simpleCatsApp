@@ -1,6 +1,7 @@
 package org.k2apps.simplecatsapp.ui.details
 
 import android.app.Application
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,19 +9,17 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.k2apps.simplecatsapp.data.model.Breed
 import org.k2apps.simplecatsapp.data.model.Cat
-import org.k2apps.simplecatsapp.data.repository.db.AppDatabase
 import org.k2apps.simplecatsapp.data.repository.db.BreedsRepository
 import org.k2apps.simplecatsapp.data.repository.db.CatsRepository
 
-class CatDetailsViewModel(val cat: Cat, app: Application) : AndroidViewModel(app) {
+class CatDetailsViewModel @ViewModelInject constructor(
+    app: Application,
+    private val catsRepository: CatsRepository,
+    private val breedsRepository: BreedsRepository
+) : AndroidViewModel(app) {
 
-    private val catsRepository: CatsRepository =
-        CatsRepository(AppDatabase.getDatabase(getApplication()).catsDao())
-    private val breedsRepository: BreedsRepository =
-        BreedsRepository(AppDatabase.getDatabase(getApplication()).breedsDao())
-
-    private val _isLike = MutableLiveData("")
-    val isLike: LiveData<String> = _isLike
+    private val _isCatSaved = MutableLiveData(false)
+    val isCatSaved: LiveData<Boolean> = _isCatSaved
 
     private val _selectedCat = MutableLiveData<Cat>()
     val selectedCat: LiveData<Cat>
@@ -30,11 +29,9 @@ class CatDetailsViewModel(val cat: Cat, app: Application) : AndroidViewModel(app
         get() = _selectedCatBreed
 
 
-    private var isCatSaved = false
-
-    init {
+    fun initCat(cat: Cat) {
         viewModelScope.launch {
-            _selectedCat.value = cat
+            _selectedCat.postValue(cat)
             if (cat.breeds.isNotEmpty()) _selectedCatBreed.value = cat.breeds[0]
             else {
                 val localBreed = cat.bredId?.let { breedsRepository.getBreedById(it) }
@@ -42,29 +39,32 @@ class CatDetailsViewModel(val cat: Cat, app: Application) : AndroidViewModel(app
                     _selectedCatBreed.value = localBreed
             }
 
-            isCatSaved = catsRepository.getCatById(cat.id) != null
-            _isLike.value = if (isCatSaved) "saved" else "not saved"
+            _isCatSaved.postValue(catsRepository.getCatById(cat.id) != null)
         }
     }
 
     fun onSaveCat() {
         viewModelScope.launch {
-            if (isCatSaved) {
-                catsRepository.delete(cat)
-            } else {
-                if (cat.breeds.isNotEmpty()) cat.breeds[0]?.let {
-                    cat.bredId = it.id
-                    breedsRepository.insert(it)
-                }
-                catsRepository.insert(cat)
-            }
-            isCatSaved = !isCatSaved
-            _isLike.value = if (isCatSaved) "saved" else "not saved"
+            onSaveCatSuspend()
         }
+    }
+
+    suspend fun onSaveCatSuspend() {
+        val cat = _selectedCat.value!!
+        if (_isCatSaved.value == true) {
+            catsRepository.delete(cat)
+        } else {
+            if (cat.breeds.isNotEmpty()) cat.breeds[0]?.let {
+                cat.bredId = it.id
+                breedsRepository.insert(it)
+            }
+            catsRepository.insert(cat)
+        }
+        _isCatSaved.postValue(!_isCatSaved.value!!)
     }
 
 
     companion object {
-        private const val TAG = "DetailsViewModel"
+        private const val TAG = "CatDetailsViewModel"
     }
 }

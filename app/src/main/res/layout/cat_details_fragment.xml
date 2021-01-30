@@ -87,7 +87,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
-                    android:text="@{viewModel.isLike}"
+                    android:text="@{viewModel.isCatSaved ? @string/saved : @string/not_saved}"
                     android:textSize="14sp"
                     tools:text="Saved" />
             </LinearLayout>
@@ -97,9 +97,9 @@
             android:id="@+id/like"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp" android:backgroundTint="@color/purple_500"
+            android:layout_margin="16dp"
             android:onClick="@{() -> viewModel.onSaveCat()}"
-            android:src="@drawable/ic_refresh"
+            android:src="@{viewModel.isCatSaved ? @drawable/ic_star : @drawable/ic_add}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

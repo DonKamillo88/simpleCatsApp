@@ -27,13 +27,23 @@
             tools:src="@tools:sample/avatars" />
 
         <ImageView
-            android:id="@+id/has_breed"
+            android:id="@+id/saved"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
-            app:breedStatus="@{cat.breeds}"
-            android:src="@drawable/ic_breed_status"
+            android:src="@drawable/ic_save_mark"
+            android:visibility="@{cat.isSaved ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/has_breed"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/ic_star"
+            app:breedStatus="@{cat.breeds}"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

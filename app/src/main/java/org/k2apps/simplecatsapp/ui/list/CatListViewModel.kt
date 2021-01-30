@@ -9,48 +9,68 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.k2apps.simplecatsapp.data.model.Cat
 import org.k2apps.simplecatsapp.data.repository.db.CatsRepository
-import org.k2apps.simplecatsapp.data.repository.remote.CatsApi
+import org.k2apps.simplecatsapp.data.repository.remote.RemoteCatsRepository
 
-class CatListViewModel @ViewModelInject constructor(val catsRepository: CatsRepository) : ViewModel() {
+class CatListViewModel @ViewModelInject constructor(
+    private val localCatsRepository: CatsRepository,
+    private val remoteCatsRepository: RemoteCatsRepository
+) :
+    ViewModel() {
 
     private val _cats = MutableLiveData<List<Cat>>()
     private val _navigateToSelectedCat = MutableLiveData<Cat>()
+    private val _isShowingSavedCats = MutableLiveData(false)
+    private var page = 1
+    private var limit = 50
+    private var order = "Desc"
 
     val cats: LiveData<List<Cat>>
         get() = _cats
     val navigateToSelectedCat: LiveData<Cat>
         get() = _navigateToSelectedCat
+    val isShowingSavedCats: LiveData<Boolean>
+        get() = _isShowingSavedCats
 
-    private var isShowingSavedCats = false
+    var isHandleBackButton = MutableLiveData(false)
 
     init {
         getCats()
-    }
-
-    fun onShowSavedCats() {
-        viewModelScope.launch {
-            isShowingSavedCats = !isShowingSavedCats
-            if (isShowingSavedCats) {
-                _cats.value = catsRepository.getAll()
-            } else {
-                getCats()
-            }
-
-//            Log.e(TAG, "onShowSavedCats: ${allSavedCats.size}")
-
-        }
     }
 
     fun onRefreshList() {
         getCats()
     }
 
+    fun onBackClick() {
+        if (_isShowingSavedCats.value == true) {
+            getCats()
+            isHandleBackButton.value = false
+            _isShowingSavedCats.value = false
+        }
+    }
+
+    fun onShowSavedCats() {
+        viewModelScope.launch {
+            _cats.value = localCatsRepository.getAll()
+            _isShowingSavedCats.value = true
+            isHandleBackButton.value = true
+        }
+    }
+
     private fun getCats() {
-        Log.e(TAG, "getCats: ")
         viewModelScope.launch {
             try {
-                _cats.value = CatsApi.retrofitService.getCats()
-                Log.e(TAG, "getCats: success")
+                val allCats = remoteCatsRepository.getCats(page, limit, order)
+                val catsWithBreeds = allCats.filter { it.breeds.isNotEmpty() }
+
+                val catsToShow = if (catsWithBreeds.size < MINIMUM_CATS_NUMBER_TO_SHOW) {
+                    allCats
+                } else {
+                    catsWithBreeds
+                }
+
+                addSavedMarkToCats(catsToShow)
+                _cats.value = catsToShow
             } catch (e: Exception) {
                 _cats.value = ArrayList()
                 Log.e(TAG, "getCats: error: $e")
@@ -66,7 +86,21 @@ class CatListViewModel @ViewModelInject constructor(val catsRepository: CatsRepo
         _navigateToSelectedCat.value = null
     }
 
+    private suspend fun addSavedMarkToCats(cats: List<Cat>) {
+        val savedCats = localCatsRepository.getAll()
+        for (cat in cats) {
+            for (savedCat in savedCats) {
+                if (savedCat.id == cat.id) {
+                    cat.isSaved = true
+                    break
+                }
+            }
+        }
+    }
+
+
     companion object {
         private const val TAG = "CatListViewModel"
+        private const val MINIMUM_CATS_NUMBER_TO_SHOW = 5
     }
 }

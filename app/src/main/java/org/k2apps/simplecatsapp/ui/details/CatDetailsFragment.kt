@@ -1,7 +1,6 @@
 package org.k2apps.simplecatsapp.ui.details
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,10 @@ import org.k2apps.simplecatsapp.databinding.CatDetailsFragmentBinding
 @AndroidEntryPoint
 class CatDetailsFragment : Fragment() {
 
+    private val viewModel: CatDetailsViewModel by lazy {
+        ViewModelProvider(this).get(CatDetailsViewModel::class.java)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -24,10 +27,9 @@ class CatDetailsFragment : Fragment() {
         val safeArgs: CatDetailsFragmentArgs by navArgs()
         val cat = safeArgs.cat
 
-        Log.e(TAG, "onCreateView: $cat")
+        viewModel.initCat(cat)
+        binding.viewModel = viewModel
 
-        val viewModelFactory = CatDetailsViewModelFactory(cat, requireNotNull(activity).application)
-        binding.viewModel = ViewModelProvider(this, viewModelFactory).get(CatDetailsViewModel::class.java)
 
         return binding.root
     }

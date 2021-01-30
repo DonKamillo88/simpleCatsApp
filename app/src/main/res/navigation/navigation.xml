@@ -3,20 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/catListFragment">
+    app:startDestination="@id/home">
 
     <fragment
-        android:id="@+id/catListFragment"
+        android:id="@+id/home"
         android:name="org.k2apps.simplecatsapp.ui.list.CatListFragment"
         android:label="cat_list_fragment"
         tools:layout="@layout/cat_list_fragment">
 
         <action
-            android:id="@+id/action_catListFragment_to_catDetailsFragment"
-            app:destination="@id/catDetailsFragment" />
+            android:id="@+id/actionHomeToDetails"
+            app:destination="@id/details" />
     </fragment>
     <fragment
-        android:id="@+id/catDetailsFragment"
+        android:id="@+id/details"
         android:name="org.k2apps.simplecatsapp.ui.details.CatDetailsFragment"
         android:label="cat_details_fragment"
         tools:layout="@layout/cat_details_fragment">
@@ -24,4 +24,9 @@
             android:name="cat"
             app:argType="org.k2apps.simplecatsapp.data.model.Cat" />
     </fragment>
+    <fragment
+        android:id="@+id/about"
+        android:name="org.k2apps.simplecatsapp.ui.about.AboutFragment"
+        android:label="AboutFragment"
+        tools:layout="@layout/about_fragment" />
 </navigation>

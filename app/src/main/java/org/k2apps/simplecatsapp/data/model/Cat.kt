@@ -18,11 +18,14 @@ data class Cat(
     @ColumnInfo(name = "url") @Json(name = "url") val imgSrcUrl: String,
     @ColumnInfo(name = "width") val width: Int,
     @ColumnInfo(name = "height") val height: Int,
-
     @ColumnInfo(name = "breed_id") var bredId: String?,
 
     @Ignore
-    @ColumnInfo(name = "breeds") val breeds: List<Breed?> = emptyList()
+    @ColumnInfo(name = "breeds") val breeds: List<Breed?> = emptyList(),
+
+    @Ignore
+    var isSaved: Boolean = false
+
 ) : Parcelable {
 
     constructor(
@@ -31,5 +34,5 @@ data class Cat(
         width: Int,
         height: Int,
         bredId: String?
-    ) : this(id, imgSrcUrl, width, height, bredId, emptyList())
+    ) : this(id, imgSrcUrl, width, height, bredId, emptyList(), false)
 }
