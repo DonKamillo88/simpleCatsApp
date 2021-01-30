@@ -22,10 +22,11 @@ class CatsApiServiceTest {
     lateinit var service: CatsApiService
 
     @BeforeEach
-    internal fun setUp()   {
+    internal fun setUp() {
         MockitoAnnotations.initMocks(this)
         runBlocking {
-        whenever(service.getCats(any(), any(), any())).thenReturn(expectedRepos)}
+            whenever(service.getCats(any(), any(), any())).thenReturn(expectedRepos)
+        }
     }
 
     @Test

@@ -8,23 +8,22 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import kotlinx.coroutines.runBlocking
+import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.CoreMatchers.not
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.k2apps.simplecatsapp.data.model.Cat
-import org.k2apps.simplecatsapp.data.repository.remote.CatsApiService
-import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.MockitoAnnotations
+import org.k2apps.simplecatsapp.data.repository.remote.RemoteCatsRepository
+import org.k2apps.simplecatsapp.di.RepositoryModule
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class AppTest {
+@UninstallModules(RepositoryModule::class)
+class MainTest {
 
     private val expectedRepos = listOf(
         Cat("1", "", 100, 100, "1"),
@@ -34,14 +33,12 @@ class AppTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
-    @Mock
-    lateinit var service: CatsApiService
 
-    @Before
-    internal fun setUp() {
-        MockitoAnnotations.initMocks(this)
-        runBlocking {
-            Mockito.`when`((service.getCats(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString()))).thenReturn(expectedRepos)
+    @BindValue
+    @JvmField
+    val provideFakeRemoteCatsRepository: RemoteCatsRepository = object : RemoteCatsRepository {
+        override suspend fun getCats(page: Int, limit: Int, order: String): List<Cat> {
+            return expectedRepos
         }
     }
 

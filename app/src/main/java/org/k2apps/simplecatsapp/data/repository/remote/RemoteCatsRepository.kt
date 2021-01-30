@@ -1,9 +1,13 @@
 package org.k2apps.simplecatsapp.data.repository.remote
 
-import javax.inject.Inject
+import org.k2apps.simplecatsapp.data.model.Cat
 
-class RemoteCatsRepository @Inject constructor(private val catsApiService: CatsApiService) {
+interface RemoteCatsRepository {
 
-    suspend fun getCats(page: Int, limit: Int, order: String) =
-        catsApiService.getCats(page, limit, order)
+    suspend fun getCats(page: Int, limit: Int, order: String): List<Cat>
+
+    class RemoteCatsRepositoryImpl(private val catsApiService: CatsApiService) : RemoteCatsRepository {
+        override suspend fun getCats(page: Int, limit: Int, order: String) =
+            catsApiService.getCats(page, limit, order)
+    }
 }

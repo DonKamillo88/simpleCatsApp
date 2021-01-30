@@ -17,8 +17,10 @@
         tools:context=".ui.main.details.DetailsFragment">
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/is_like">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -80,18 +82,21 @@
                     android:textSize="14sp"
                     tools:text="Curious, Social, Intelligent, Loyal, Outgoing, Adventurous, Affectionate" />
 
-                <TextView
-                    android:id="@+id/is_like"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:text="@{viewModel.isCatSaved ? @string/saved : @string/not_saved}"
-                    android:textSize="14sp"
-                    tools:text="Saved" />
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
+
+
+        <TextView
+            android:id="@+id/is_like"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="@{viewModel.isCatSaved ? @string/saved : @string/not_saved}"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="Saved" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/like"
